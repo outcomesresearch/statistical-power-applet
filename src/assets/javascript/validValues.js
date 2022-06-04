@@ -1,7 +1,7 @@
 // Defines valid min, max, error msg, and precision for each entry paramater.
 // Used in validate().
 
-const validValues = {
+export const validValues = {
   mu0: {
     initial: 100,
     min: -10000,

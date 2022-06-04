@@ -1,6 +1,20 @@
-class Triangle {
+import {
+  getBottomContainers,
+  getContainers,
+  getScreenH,
+  getScreenW,
+  getP,
+  screenScale,
+  verticalScale,
+  setValuesNew,
+} from "./curves";
+import { pdf } from "./calculations";
+import channel from "./Channel";
+import { validate } from "./validation";
+
+export class Triangle {
   constructor(position) {
-    bottomContainers
+    getBottomContainers()
       .append("path")
       .attr("id", "triangle")
       .attr("d", d3.symbol().type(d3.symbolTriangle))
@@ -9,22 +23,22 @@ class Triangle {
   }
 }
 
-class Line {
+export class Line {
   constructor(x, id, dark) {
-    bottomContainers
+    getBottomContainers()
       .append("line")
       .attr("id", id)
       .attr("x1", x)
-      .attr("y1", screen_h - 20)
+      .attr("y1", getScreenH() - 20)
       .attr("x2", x)
-      .attr("y2", screen_h * 0.1)
+      .attr("y2", getScreenH() * 0.1)
       .style("stroke", dark ? "#283747" : "grey")
       .style("stroke-width", "2")
       .style("stroke-dasharray", "4, 4");
   }
 }
 
-class Curve {
+export class Curve {
   constructor(options) {
     Object.assign(this, options);
     this.isBottom = this.position === "bottom";
@@ -43,6 +57,7 @@ class Curve {
    * Coordinate calculating an array of values to draw a normal distribution curve.  Position parameter is to specify that we're drawing a flattened curve in the top pane
    */
   generateCurve() {
+    let p = getP();
     let { std, n } = p;
     if (!this.isBottom) n = 1.25;
     const l_bound = p[this.center] - 4 * std;
@@ -63,6 +78,8 @@ class Curve {
 
   drag() {
     return d3.drag().on("drag", (d) => {
+      const p = getP();
+      const screen_w = getScreenW();
       const newMu = p[this.center] + (d3.event.dx * 8 * p.std) / screen_w;
       const changed = { [this.center]: newMu };
       validate(changed) &&
@@ -81,7 +98,9 @@ class Curve {
    */
   addPath() {
     this.container =
-      containers[this.position][this.id.includes("pink") ? "front" : "back"];
+      getContainers()[this.position][
+        this.id.includes("pink") ? "front" : "back"
+      ];
 
     const curveFunction = d3
       .line()

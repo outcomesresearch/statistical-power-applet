@@ -10,136 +10,15 @@
     <link rel="stylesheet" href="style.css" />
   </head>
 
-  <body onLoad="startSpinningWheel()" style="margin: 0;">
-    <div id="loader"></div>
-    <div class="container">
-      <div class="controls">
-        <div style="height: 70%;">
-          <div class="leftControls">
-            <div class="inputContainer">
-              <table>
-                <tr>
-                  <td>
-                    μ
-                    <sub>0</sub>
-                    =
-                    <input
-                      type="text"
-                      id="mu0"
-                      autocomplete="off"
-                      onchange="validate({[this.id]: this.value})  && setValuesNew({[this.id]: this.value});"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    μ
-                    <sub>1</sub>
-                    =
-                    <input
-                      type="text"
-                      id="mu1"
-                      autocomplete="off"
-                      onchange="validate({[this.id]: this.value}) && setValuesNew({[this.id]: this.value});"
-                    />
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>
-                    σ =
-                    <input
-                      type="text"
-                      id="std"
-                      autocomplete="off"
-                      onchange="validate({[this.id]: this.value}) && setValuesNew({[this.id]: this.value});"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    d =
-                    <input
-                      type="text"
-                      id="delta"
-                      autocomplete="off"
-                      onchange="validate({[this.id]: this.value}) && setValuesNew({[this.id]: this.value});"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    α =
-                    <input
-                      id="alpha"
-                      autocomplete="off"
-                      onchange="validate({[this.id]: this.value}) && setValuesNew({[this.id]: this.value});"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    β =
-                    <input type="text" id="effectsize" disabled />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    n =
-                    <input
-                      type="text"
-                      id="n"
-                      autocomplete="off"
-                      onchange="validate({[this.id]: this.value}) && setValuesNew({[this.id]: this.value});"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Power =
-                    <input
-                      type="text"
-                      id="power"
-                      autocomplete="off"
-                      onchange="validate({[this.id]: this.value}) && setValuesNew({[this.id]: this.value})"
-                    />
-                  </td>
-                </tr>
-              </table>
-              <div class="samplebutton" onmousedown="sample()">Sample</div>
-            </div>
-          </div>
-          <div class="rightControls">
-            <div id="slider-vertical2" class="shell">
-              <div class="inner label">
-                P
-                <br />
-                o
-                <br />
-                w
-                <br />
-                e
-                <br />
-                r
-              </div>
-            </div>
-            <div id="slider-vertical1" class="shell">
-              <div class="inner label">n</div>
-            </div>
-          </div>
-        </div>
-        <div class="consoleContainer">
-          <div class="console">console down here</div>
-        </div>
-      </div>
-      <div class="graph">
-        <div class="minigraph"></div>
-        <div class="maingraph"></div>
-        <br />
-        <br />
-      </div>
-
-      <!-- Moving all loading of page resources to after animated ring (in body) has begun -->
+  <body>
+    <noscript>
+      <strong></strong>
+        We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to continue.
+      </strong>
+    </noscript>
+    <div id="app"></div>
+          <!-- Moving all loading of page resources to after animated ring (in body) has begun -->
       <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
       <link
         rel="stylesheet"
@@ -153,13 +32,5 @@
         async
         src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"
       ></script>
-
-      <script type="text/javascript" src="Channel.js"></script>
-      <script type="text/javascript" src="Shapes.js"></script>
-      <script type="text/javascript" src="validValues.js"></script>
-      <script type="text/javascript" src="calculations.js"></script>
-      <script type="text/javascript" src="validation.js"></script>
-      <script type="text/javascript" src="curves.js"></script>
-    </div>
   </body>
 </html>

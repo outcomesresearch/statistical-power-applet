@@ -11,6 +11,11 @@ power when alpha (Type I error) or mu1 (alternative population mean) are changed
 * @Last Modified time: 4/30/18
 */
 
+import { validValues } from "./validValues";
+import { output, getP, setValuesNew } from "./curves";
+import channel from "./Channel";
+import { calculateValue } from "./calculations";
+
 // Main Sample size Slider on right (grey one)
 $(function () {
   $("#slider-vertical1").slider({
@@ -62,10 +67,6 @@ $(function () {
   });
 });
 
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n) && !isNaN(+n);
-}
-
 function setSliderTicks(el) {
   $(el).find(".ui-slider-tick-mark").remove();
   for (let i = 1; i < 20; i++) {
@@ -80,12 +81,12 @@ function setSliderTicks(el) {
         .css("bottom", i * 5 - 1 + "%")
         .appendTo(".shell")
         .css("height", "8px");
-
     }
   }
 }
 
-function setValues(id) {
+export function setValues(id) {
+  let p = getP();
   output("");
   Object.keys(p).forEach((v) => {
     $(`#${v}`).val(p[v].toFixed(validValues[v].precision));
@@ -101,7 +102,7 @@ $(function () {
   channel.on("drag", setValues);
 });
 
-function validate(component) {
+export function validate(component) {
   const id = Object.keys(component)[0];
   const val = parseFloat(component[id]);
   output("");
@@ -145,25 +146,4 @@ function validate(component) {
     const t_power = calculateValue("power", { mu1: t_mu1 });
     return withinBounds({ mu1: t_mu1 }) && withinBounds({ power: t_power });
   }
-
-  // return valid;
-  // if (["n", "mu1", "std", "alpha", "delta"].includes(item)) {
-  //   if (item == "delta") {
-  //     mu1 = delta * std + mu0;
-  //     internalmu1 = mu1;
-  //     $("#mu1").val(parseInt(mu1));
-  //     console.log(internalmu1);
-  //   } else {
-  //     calcDelta(mu1);
-  //   }
-
-  //   power = calculatePower(mu1);
-  //   setPowerSampleSize();
-  // }
-
-  // // If Mu or Delta are being changed, internalmu is set to the new mu1, else no
-  // if (item == "mu1" || item == "delta") {
-  //   internalmu1 = mu1;
-  // } else mu1 = internalmu1;
-  // plot();
 }

@@ -19,3 +19,5 @@ class Channel {
     this.subscribers[eventName].push(callback);
   }
 }
+
+export default new Channel();

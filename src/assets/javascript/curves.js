@@ -1,3 +1,39 @@
+import channel from "./Channel";
+import { validValues } from "./validValues";
+import { calculateValue, normalcdf } from "./calculations";
+import { setValues } from "./validation";
+import { Line, Curve, Triangle } from "./Shapes";
+import { pdf, ztest } from "./calculations";
+
+let screen_w;
+let screen_h;
+let topscreen_h;
+let containers;
+let bottomContainers;
+let topContainers;
+
+const p = {};
+
+export function getP() {
+  return p;
+}
+
+export function getBottomContainers() {
+  return bottomContainers;
+}
+
+export function getContainers() {
+  return containers;
+}
+
+export function getScreenH() {
+  return screen_h;
+}
+
+export function getScreenW() {
+  return screen_w;
+}
+
 /*
 This script handles creating and drawing the various elements of the tool interface.
 It calculates the arrays needed to plot the 4 SVG curves (two red, two blue),
@@ -10,15 +46,11 @@ drags a curve around.
 * @Last Modified time: 3/10/19
 */
 
-// add an appropriate event listener
-const channel = new Channel();
-const p = {};
-
-function output(msg, color = "black") {
+export function output(msg, color = "black") {
   $(".console").text(msg).css("color", color);
 }
 
-function setValuesNew(changed, event, eventAuthor) {
+export function setValuesNew(changed, event, eventAuthor) {
   event = event || "change";
   const id = Object.keys(changed)[0];
   const value = changed[id];
@@ -60,10 +92,7 @@ function setValuesNew(changed, event, eventAuthor) {
 
 //Update size of tool and replot shapes when screensize is changed
 $(window).resize(function () {
-  // mu1 = internalmu1;
   initScreenSize();
-  // plot();
-  // channel.emit("change");
 });
 
 function setClipPaths() {
@@ -88,7 +117,7 @@ function setClipPaths() {
 }
 
 // Spinning wheel to display while loading for slow connections
-function startSpinningWheel() {
+export function startSpinningWheel() {
   setTimeout(prepare, 0);
 }
 
@@ -96,18 +125,6 @@ function initScreenSize() {
   screen_w = $(".maingraph").innerWidth(); //Establish screen space
   screen_h = $(".maingraph").innerHeight();
   topscreen_h = $(".minigraph").innerHeight();
-}
-
-function appendText(id, anchor, movable, x, y, text) {
-  var textObject = anchor
-    .append("text")
-    .attr("id", id)
-    .attr("x", x)
-    .attr("y", y)
-    .text(text);
-  if (movable) {
-    textObject.data([{ x: 0 }]);
-  }
 }
 
 function axisPrep() {
@@ -137,7 +154,7 @@ function axisPrep() {
 }
 
 //Convert user/axis scale to pixel scale for writing to screen
-function screenScale(x) {
+export function screenScale(x) {
   const { mu0, std } = p;
   return d3
     .scaleLinear()
@@ -146,7 +163,7 @@ function screenScale(x) {
 }
 
 //Convert pixel-scale for writing to screen to user/axis scale
-function displayScale(x) {
+export function displayScale(x) {
   const { mu0, std } = p;
   return d3
     .scaleLinear()
@@ -155,182 +172,12 @@ function displayScale(x) {
 }
 
 //Scale vertically by mapping the max height a curve can have (pdf w n==100) to the screen height
-function verticalScale(y) {
+export function verticalScale(y) {
   const { mu0, std } = p;
   return d3
     .scaleLinear()
     .domain([0, pdf(mu0, mu0, std / Math.sqrt(100))])
     .range([0, screen_h * 1.16])(y);
-}
-
-// function textPrep() {
-//   greytextXPos = screen_w - (screen_w / 10) * 9.8;
-//   appendText(
-//     "smallpinktext",
-//     topContainer,
-//     1,
-//     screenScale({ ...p, x: mu1 }),
-//     (topscreen_h / 10) * 2.5,
-//     "Alternative Population"
-//   );
-//   appendText(
-//     "smallbluetext",
-//     mainContainer,
-//     "",
-//     screenScale({ ...p, x: mu0 }),
-//     (topscreen_h / 10) * 2.5,
-//     "Null Population"
-//   );
-//   appendText(
-//     "smallgreytext",
-//     mainContainer,
-//     "",
-//     greytextXPos,
-//     screen_h - 50,
-//     "Sampling"
-//   );
-//   appendText(
-//     "smallgreytext",
-//     mainContainer,
-//     "",
-//     greytextXPos,
-//     screen_h - 35,
-//     "Distributions"
-//   );
-// }
-
-function alphaErrorPrep() {
-  d3.selectAll("line, #alphaErrorBlue, #rect-clip").each(function () {
-    this.remove();
-  });
-  // xValue = normalcdf();
-  // scaledXValue = screenScale(mu0 - xValue);
-
-  // addPath(
-  //   "rect-clip",
-  //   "clipPath",
-  //   scaledXValue,
-  //   Math.abs(screen_w - scaledXValue),
-  //   mainContainer,
-  //   "",
-  //   "",
-  //   ""
-  // );
-  // addPath(
-  //   "alphaErrorBlue",
-  //   "path",
-  //   "",
-  //   "",
-  //   mainContainer,
-  //   firsthalf_main,
-  //   screen_h - 20
-  // );
-
-  // xValue = normalcdf();
-  // scaledXValue = screenScale(mu0 - xValue);
-
-  // mainContainer
-  //   .append("line")
-  //   .attr("id", "dashedLine")
-  //   .attr("x1", scaledXValue)
-  //   .attr("y1", screen_h - 20)
-  //   .attr("x2", scaledXValue)
-  //   .attr("y2", screen_h * 0.1);
-
-  // addPath(
-  //   "mainbluestroke",
-  //   "path",
-  //   "",
-  //   "",
-  //   mainContainer,
-  //   firsthalf_main,
-  //   screen_h - 20
-  // );
-  // checkOverlap();
-}
-
-// Calculate normalized difference between the means using mu1, mu0, and std
-function calcDelta(mu) {
-  delta = parseFloat(((mu - mu0) / std).toFixed(2));
-  $("#delta").val(delta);
-}
-
-// Validate input before setting internal variables
-// Delta, alpha error are validated in changeDelta() alphaErrorPrep()
-// Beta error is not validated as it is readonly
-// function setValues() {
-//   ["mu0", "mu1", "std", "alpha", "n"].forEach((param) => {
-//     $(`#${param}`).val(validValues[param].initial);
-//   });
-
-//   mu0 = parseInt($("#mu0").val());
-//   mu1 = parseInt($("#mu1").val());
-//   std = parseInt($("#std").val());
-//   alpha = parseFloat($("#alpha").val());
-//   n = parseInt($("#n").val());
-//   power = calculatePower(mu1);
-//   $("#effectsize").val((1 - power).toFixed(3));
-//   internalmu1 = mu1;
-
-//   //Delta is set as a function of mu0, mu1, and standard dev
-//   calcDelta(internalmu1);
-
-//   $("#slider-vertical2").slider("value", power);
-//   $("#power").val(power.toFixed(3));
-// }
-
-// Calculate sample size based on power.  Used when power is being set
-// by the user through the text entry box or the slider, and a resulting
-// sample size must be calculated
-function calcSampleSize(temp_power) {
-  return Math.pow(
-    ((inv(temp_power - cdf(inv(alpha / 2, 0, 1), 0, 1), 0, 1) +
-      inv(1 - alpha / 2, 0, 1)) *
-      std) /
-      (mu1 - mu0),
-    2
-  );
-}
-
-// Respond to drag events
-function dragged(d) {
-  // console.log("internalmu1: ", internalmu1, "mu1: ", mu1)
-  d3.selectAll("#triangle, #sampleMeanLine, .bar").each(function () {
-    this.remove();
-  });
-  $(".console").text("");
-  calcDelta(internalmu1);
-  d3.select("#mainpink").attr("transform", function (d) {
-    d.x += d3.event.dx;
-    return "translate(" + [d.x, screen_h - 20] + ") scale(1,-1)";
-  });
-  d3.select("#smallpink").attr("transform", function (d) {
-    d.x += d3.event.dx;
-    return "translate(" + [d.x, topscreen_h] + ") scale(1,-1)";
-  });
-  d3.select("#smallpinktext").attr("transform", function (d) {
-    d.x += d3.event.dx;
-    return "translate(" + [d.x, 0] + ")";
-  });
-
-  $("#mu1").val(Math.round(mu1 + (d.x * 8 * std) / screen_w));
-  internalmu1 = mu1 + (d.x * 8 * std) / screen_w;
-  // console.log("before calculating power: ", internalmu1)
-  power = calculatePower(internalmu1);
-  // console.log("after calculating power: ", internalmu1)
-  // console.log("mu before entering checkOverlap: ", internalmu1)
-  checkOverlap(internalmu1);
-  setPowerSampleSize();
-}
-
-// Coordinates the creation of most shapes on the screen
-function plot() {
-  $(".bar").remove();
-  curveFactory();
-  pathFactory();
-  alphaErrorPrep();
-  axisPrep();
-  textPrep();
 }
 
 // When tool loads for the first time, initialize screen size and prepare the
@@ -435,7 +282,7 @@ function prepare() {
 // - Draws and stacks these to the top screen in a stylized histogram.
 // - Calculates mean sample, and determines whether or not to reject Ho
 // - Writes information to the tool's console
-function sample() {
+export function sample() {
   let { mu0, mu1, std, alpha, n } = p;
 
   if (mu1 < mu0) {
