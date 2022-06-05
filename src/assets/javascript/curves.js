@@ -5,9 +5,6 @@ import { setValues } from "./validation";
 import { Line, Curve, Triangle } from "./Shapes";
 import { pdf, ztest } from "./calculations";
 
-let screen_w;
-let screen_h;
-let topscreen_h;
 let containers;
 let bottomContainers;
 let topContainers;
@@ -24,14 +21,6 @@ export function getBottomContainers() {
 
 export function getContainers() {
   return containers;
-}
-
-export function getScreenH() {
-  return screen_h;
-}
-
-export function getScreenW() {
-  return screen_w;
 }
 
 /*
@@ -90,17 +79,15 @@ export function setValuesNew(changed, event, eventAuthor) {
   return true;
 }
 
-//Update size of tool and replot shapes when screensize is changed
-$(window).resize(function () {
-  initScreenSize();
-});
-
 function setClipPaths() {
   const scaledX = screenScale(p.mu0 - normalcdf(p));
 
   ["right", "left"].forEach((side) => {
     const x = side === "left" ? 0 : scaledX;
-    const width = side === "left" ? scaledX : Math.abs(screen_w - scaledX);
+    const width =
+      side === "left"
+        ? scaledX
+        : Math.abs($(".maingraph").innerWidth() - scaledX);
     $(`#rect-clip-${side},#dashedLine`).remove();
 
     bottomContainers
@@ -109,7 +96,7 @@ function setClipPaths() {
       .append("rect") // shape it as a rectangle
       .attr("x", x) // position the top x corner
       .attr("y", 0) // position the y-corner, always 0
-      .attr("height", screen_h) // set the height
+      .attr("height", $(".maingraph").innerHeight()) // set the height
       .attr("width", width); // set the width
 
     new Line(scaledX, "dashedLine", "dark");
@@ -121,22 +108,19 @@ export function startSpinningWheel() {
   setTimeout(prepare, 0);
 }
 
-function initScreenSize() {
-  screen_w = $(".maingraph").innerWidth(); //Establish screen space
-  screen_h = $(".maingraph").innerHeight();
-  topscreen_h = $(".minigraph").innerHeight();
-}
-
 function axisPrep() {
   $(".axis").remove();
   const axisKeys = Array.from(Array(9).keys());
-  const ticks = axisKeys.map((v) => v * (screen_w / 8) + 1);
+  const ticks = axisKeys.map((v) => v * ($(".maingraph").innerWidth() / 8) + 1);
   const ticknames = axisKeys.map((v) =>
     Math.abs(v - 4) === 4 ? "" : (v - 4) * p.std + p.mu0
   );
 
   //Create the Scale we will use for the Axis
-  var axisScale = d3.scaleLinear().domain([0, screen_w]).range([0, screen_w]);
+  var axisScale = d3
+    .scaleLinear()
+    .domain([0, $(".maingraph").innerWidth()])
+    .range([0, $(".maingraph").innerWidth()]);
 
   //Create Axis
   var xAxis = d3
@@ -149,7 +133,10 @@ function axisPrep() {
   bottomContainers
     .append("g")
     .attr("class", "axis")
-    .attr("transform", "translate(0," + (screen_h - 20) + ")")
+    .attr(
+      "transform",
+      "translate(0," + ($(".maingraph").innerHeight() - 20) + ")"
+    )
     .call(xAxis);
 }
 
@@ -159,7 +146,7 @@ export function screenScale(x) {
   return d3
     .scaleLinear()
     .domain([mu0 - 4 * std, mu0 + 4 * std])
-    .range([0, screen_w])(x);
+    .range([0, $(".maingraph").innerWidth()])(x);
 }
 
 //Convert pixel-scale for writing to screen to user/axis scale
@@ -167,7 +154,7 @@ export function displayScale(x) {
   const { mu0, std } = p;
   return d3
     .scaleLinear()
-    .domain([0, screen_w])
+    .domain([0, $(".maingraph").innerWidth()])
     .range([mu0 - 4 * std, mu0 + 4 * std])(x);
 }
 
@@ -177,7 +164,7 @@ export function verticalScale(y) {
   return d3
     .scaleLinear()
     .domain([0, pdf(mu0, mu0, std / Math.sqrt(100))])
-    .range([0, screen_h * 1.16])(y);
+    .range([0, $(".maingraph").innerHeight() * 1.16])(y);
 }
 
 // When tool loads for the first time, initialize screen size and prepare the
@@ -185,9 +172,8 @@ export function verticalScale(y) {
 // out rest of shape creation
 function prepare() {
   $("#loader").remove();
-  $(".container").css("display", "block");
+  $(".container").css("display", "grid");
   $("#description").css("display", "block");
-  initScreenSize();
 
   // Set initial values object (p)
   Object.keys(validValues).forEach((param) => {
@@ -197,17 +183,8 @@ function prepare() {
 
   setValues();
 
-  bottomContainers = d3
-    .select(".maingraph")
-    .append("svg")
-    .attr("width", screen_w)
-    .attr("height", screen_h);
-
-  topContainers = d3
-    .select(".minigraph")
-    .append("svg")
-    .attr("width", screen_w)
-    .attr("height", topscreen_h);
+  bottomContainers = d3.select(".maingraph svg");
+  topContainers = d3.select(".minigraph svg");
 
   containers = {
     top: {
@@ -308,11 +285,14 @@ export function sample() {
 
   // Grey vertical line + triangles pointing to mean of sample values
   new Line(d3mean, "sampleMeanLine");
-  new Triangle({ x: d3mean, y: screen_h - 10 });
-  new Triangle({ x: d3mean, y: 10 });
+  new Triangle({ x: d3mean, y: $(".maingraph").innerHeight() - 4 });
+  new Triangle({ x: d3mean, y: 6 });
 
   // Calculate x-scaling for histogram
-  const x = d3.scaleLinear().domain([0, screen_w]).rangeRound([0, screen_w]);
+  const x = d3
+    .scaleLinear()
+    .domain([0, $(".maingraph").innerWidth()])
+    .rangeRound([0, $(".maingraph").innerWidth()]);
 
   const bins = d3.histogram().domain(x.domain()).thresholds(x.ticks(90))(
     randomValues
@@ -324,7 +304,7 @@ export function sample() {
   const y = d3
     .scaleLinear()
     .domain([0, max * 1.5])
-    .range([topscreen_h, 0]);
+    .range([$(".minigraph").innerHeight(), 0]);
 
   topContainers
     .selectAll(".bar")
@@ -335,7 +315,7 @@ export function sample() {
     .attr("transform", (d) => "translate(" + x(d.x0) + "," + y(d.length) + ")")
     .append("rect")
     .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
-    .attr("height", (d) => topscreen_h - y(d.length))
+    .attr("height", (d) => $(".minigraph").innerHeight() - y(d.length))
     .attr("rx", 2)
     .attr("rx", 2)
     .style("fill", "#ffffff")

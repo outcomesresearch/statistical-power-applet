@@ -1,7 +1,6 @@
 import {
   getBottomContainers,
   getContainers,
-  getScreenH,
   getScreenW,
   getP,
   screenScale,
@@ -29,9 +28,9 @@ export class Line {
       .append("line")
       .attr("id", id)
       .attr("x1", x)
-      .attr("y1", getScreenH() - 20)
+      .attr("y1", 0)
       .attr("x2", x)
-      .attr("y2", getScreenH() * 0.1)
+      .attr("y2", 500)
       .style("stroke", dark ? "#283747" : "grey")
       .style("stroke-width", "2")
       .style("stroke-dasharray", "4, 4");
@@ -79,8 +78,8 @@ export class Curve {
   drag() {
     return d3.drag().on("drag", (d) => {
       const p = getP();
-      const screen_w = getScreenW();
-      const newMu = p[this.center] + (d3.event.dx * 8 * p.std) / screen_w;
+      const newMu =
+        p[this.center] + (d3.event.dx * 8 * p.std) / $(".maingraph").innerWidth();
       const changed = { [this.center]: newMu };
       validate(changed) &&
         setValuesNew(changed, "drag", this.id) &&

@@ -2,6 +2,14 @@
   <outcomes-research-wrapper :_title="`Statistical Power Applet`">
     <div id="loader"></div>
     <div class="container">
+      <div class="graph">
+        <div class="minigraph">
+          <svg width="100%" height="100%" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="maingraph">
+          <svg width="100%" height="100%" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
       <div class="controls">
         <div style="height: 70%">
           <div class="leftControls">
@@ -125,14 +133,8 @@
           </div>
         </div>
         <div class="consoleContainer">
-          <div class="console">console down here</div>
+          <div class="console"></div>
         </div>
-      </div>
-      <div class="graph">
-        <div class="minigraph"></div>
-        <div class="maingraph"></div>
-        <br />
-        <br />
       </div>
     </div>
   </outcomes-research-wrapper>
@@ -164,4 +166,7 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+@import "./assets/css/spinner.css";
+@import "./assets/css/style.css";
+</style>
