@@ -1,15 +1,13 @@
 import {
   getBottomContainers,
   getContainers,
-  getScreenW,
   getP,
-  screenScale,
-  verticalScale,
   setValuesNew,
 } from "./curves";
 import { pdf } from "./calculations";
 import channel from "./Channel";
 import { validate } from "./validation";
+import { screenScale, verticalScale } from "./scales";
 
 export class Triangle {
   constructor(position) {
@@ -79,7 +77,8 @@ export class Curve {
     return d3.drag().on("drag", (d) => {
       const p = getP();
       const newMu =
-        p[this.center] + (d3.event.dx * 8 * p.std) / $(".maingraph").innerWidth();
+        p[this.center] +
+        (d3.event.dx * 8 * p.std) / $(".maingraph").innerWidth();
       const changed = { [this.center]: newMu };
       validate(changed) &&
         setValuesNew(changed, "drag", this.id) &&

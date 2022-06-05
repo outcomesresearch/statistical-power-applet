@@ -3,8 +3,10 @@ import { validValues } from "./validValues";
 import { calculateValue, normalcdf } from "./calculations";
 import { setValues } from "./validation";
 import { Line, Curve, Triangle } from "./Shapes";
-import { pdf, ztest } from "./calculations";
+import { ztest } from "./calculations";
+import { screenScale, displayScale } from "./scales";
 
+let lin = d3.scaleLinear();
 let containers;
 let bottomContainers;
 let topContainers;
@@ -117,8 +119,7 @@ function axisPrep() {
   );
 
   //Create the Scale we will use for the Axis
-  var axisScale = d3
-    .scaleLinear()
+  var axisScale = lin
     .domain([0, $(".maingraph").innerWidth()])
     .range([0, $(".maingraph").innerWidth()]);
 
@@ -138,33 +139,6 @@ function axisPrep() {
       "translate(0," + ($(".maingraph").innerHeight() - 20) + ")"
     )
     .call(xAxis);
-}
-
-//Convert user/axis scale to pixel scale for writing to screen
-export function screenScale(x) {
-  const { mu0, std } = p;
-  return d3
-    .scaleLinear()
-    .domain([mu0 - 4 * std, mu0 + 4 * std])
-    .range([0, $(".maingraph").innerWidth()])(x);
-}
-
-//Convert pixel-scale for writing to screen to user/axis scale
-export function displayScale(x) {
-  const { mu0, std } = p;
-  return d3
-    .scaleLinear()
-    .domain([0, $(".maingraph").innerWidth()])
-    .range([mu0 - 4 * std, mu0 + 4 * std])(x);
-}
-
-//Scale vertically by mapping the max height a curve can have (pdf w n==100) to the screen height
-export function verticalScale(y) {
-  const { mu0, std } = p;
-  return d3
-    .scaleLinear()
-    .domain([0, pdf(mu0, mu0, std / Math.sqrt(100))])
-    .range([0, $(".maingraph").innerHeight() * 1.16])(y);
 }
 
 // When tool loads for the first time, initialize screen size and prepare the
@@ -289,8 +263,7 @@ export function sample() {
   new Triangle({ x: d3mean, y: 6 });
 
   // Calculate x-scaling for histogram
-  const x = d3
-    .scaleLinear()
+  const x = lin
     .domain([0, $(".maingraph").innerWidth()])
     .rangeRound([0, $(".maingraph").innerWidth()]);
 
@@ -301,8 +274,7 @@ export function sample() {
   // Calculate y-scaling for histogram
   const largestStack = d3.max(bins, (d) => d.length);
   const max = largestStack > 8 ? largestStack : 8;
-  const y = d3
-    .scaleLinear()
+  const y = lin
     .domain([0, max * 1.5])
     .range([$(".minigraph").innerHeight(), 0]);
 
