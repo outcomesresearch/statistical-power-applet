@@ -6,7 +6,6 @@ import { Line, Curve, Triangle } from "./Shapes";
 import { ztest } from "./calculations";
 import { screenScale, displayScale } from "./scales";
 
-let lin = d3.scaleLinear();
 let containers;
 let bottomContainers;
 let topContainers;
@@ -119,7 +118,8 @@ function axisPrep() {
   );
 
   //Create the Scale we will use for the Axis
-  var axisScale = lin
+  var axisScale = d3
+    .scaleLinear()
     .domain([0, $(".maingraph").innerWidth()])
     .range([0, $(".maingraph").innerWidth()]);
 
@@ -263,7 +263,8 @@ export function sample() {
   new Triangle({ x: d3mean, y: 6 });
 
   // Calculate x-scaling for histogram
-  const x = lin
+  const x = d3
+    .scaleLinear()
     .domain([0, $(".maingraph").innerWidth()])
     .rangeRound([0, $(".maingraph").innerWidth()]);
 
@@ -274,7 +275,8 @@ export function sample() {
   // Calculate y-scaling for histogram
   const largestStack = d3.max(bins, (d) => d.length);
   const max = largestStack > 8 ? largestStack : 8;
-  const y = lin
+  const y = d3
+    .scaleLinear()
     .domain([0, max * 1.5])
     .range([$(".minigraph").innerHeight(), 0]);
 
