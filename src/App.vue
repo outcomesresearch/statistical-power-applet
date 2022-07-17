@@ -5,7 +5,7 @@
         <h2 class="no-top-spacing">Statistical Power Applet is deprecated.</h2>
         <!-- <div class="grid"> -->
         <img src="./assets/img/legacy-image.png" class="legacy-image" />
-        <p class="no-top-spacing0">
+        <p class="grey">
           The
           <span class="italic"
             >Designing Clinical and Outcomes Research Workshop</span
@@ -14,11 +14,11 @@
           uses the Statistical Power Applet in its instruction.
         </p>
         <hr />
-        <p>
+        <p class="grey">
           Students are now recommended to use the G*Power applet, which offers a
           greater variety of tests and features to explore statistical power.
         </p>
-        <p>
+        <p class="grey">
           G*Power is a statistical power analysis application for Mac and
           Windows, produced and maintained by Universität Düsseldorf. More
           information about the tool is available at
@@ -47,7 +47,7 @@ export default {
   margin: 20pt;
   margin-left: auto;
   margin-right: auto;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Roboto", sans-serif;
   border-radius: 5px;
   width: max-content;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
@@ -80,6 +80,10 @@ export default {
 .no-top-spacing {
   padding-top: 0px;
   margin-top: 0px;
+}
+
+.grey {
+  color: rgb(50, 50, 50);
 }
 
 @media screen and (max-width: 600px) {
