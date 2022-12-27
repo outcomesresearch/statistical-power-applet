@@ -1,5 +1,6 @@
 <template>
   <outcomes-research-wrapper :_title="`Statistical Power Applet`">
+    <outcomes-navbar />
     <div class="deprecated">
       <div class="inner-wrapper">
         <h2 class="no-top-spacing">Statistical Power Applet is deprecated.</h2>
@@ -7,9 +8,9 @@
         <img src="./assets/img/legacy-image.png" class="legacy-image" />
         <p class="grey">
           The
-          <span class="italic"
-            >Designing Clinical and Outcomes Research Workshop</span
-          >
+          <span class="italic">
+            Designing Clinical and Outcomes Research Workshop
+          </span>
           at Washington University in St. Louis School of Medicine no longer
           uses the Statistical Power Applet in its instruction.
         </p>
@@ -22,24 +23,26 @@
           G*Power is a statistical power analysis application for Mac and
           Windows, produced and maintained by Universität Düsseldorf. More
           information about the tool is available at
-          <a :href="gpowerLink">their website</a>, including an installation
-          link in the "Download" section.
+          <a :href="gpowerLink">their website</a>
+          , including an installation link in the "Download" section.
         </p>
       </div>
     </div>
+    <outcomes-footer :copyright="copyright" />
   </outcomes-research-wrapper>
 </template>
 
 <script>
 export default {
-  name: "App",
+  name: 'App',
   data() {
     return {
+      copyright: `Copyright © 2022, Washington University School of Medicine, St. Louis, Missouri`,
       gpowerLink:
-        "https://www.psychologie.hhu.de/arbeitsgruppen/allgemeine-psychologie-und-arbeitspsychologie/gpower",
-    };
+        'https://www.psychologie.hhu.de/arbeitsgruppen/allgemeine-psychologie-und-arbeitspsychologie/gpower',
+    }
   },
-};
+}
 </script>
 
 <style>
@@ -47,7 +50,7 @@ export default {
   margin: 20pt;
   margin-left: auto;
   margin-right: auto;
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
   border-radius: 5px;
   width: max-content;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
