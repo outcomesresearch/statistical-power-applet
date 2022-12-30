@@ -10,8 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "shared-code": "git+https://github.com/outcomesresearch/shared-code.git",
-    "vue": "^2.6.11",
-    "vue-head": "^2.2.0"
+    "vue": "^2.6.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "5.0",
