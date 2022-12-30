@@ -1,5 +1,5 @@
 <template>
-  <outcomes-research-wrapper :_title="`Statistical Power Applet`">
+  <outcomes-research-wrapper :_title="title">
     <outcomes-navbar />
     <div class="deprecated">
       <div class="inner-wrapper">
@@ -37,10 +37,38 @@ export default {
   name: 'App',
   data() {
     return {
+      title: `Statistical Power Applet`,
       copyright: `Copyright © 2022, Washington University School of Medicine, St. Louis, Missouri`,
       gpowerLink:
         'https://www.psychologie.hhu.de/arbeitsgruppen/allgemeine-psychologie-und-arbeitspsychologie/gpower',
+      content:
+        'Clinical Outcomes Research at Washington University in St Louis',
     }
+  },
+  head: {
+    title: function () {
+      return {
+        inner: this.title,
+        complement: 'WashU Outcomes Research',
+      }
+    },
+    meta: function () {
+      return [
+        { name: 'application-name', content: this.title },
+        { name: 'description', content: this.content },
+
+        { name: 'twitter:title', content: this.title },
+        { n: 'twitter:description', c: this.content },
+
+        { name: 'og:description', content: this.content },
+        { name: 'og:title', content: this.title },
+        {
+          p: 'og:image',
+          c:
+            'https://cpb-us-w2.wpmucdn.com/sites.wustl.edu/dist/8/1082/files/2017/11/medical-school-featured-05-24tco0b.jpg',
+        },
+      ]
+    },
   },
 }
 </script>
