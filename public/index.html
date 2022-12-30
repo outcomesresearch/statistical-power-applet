@@ -6,28 +6,16 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" sizes="32x32" href="" />
     <link rel="apple-touch-icon" href="" />
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<%= htmlWebpackPlugin.options.url %>" />
     <meta
-      name="application-name"
-      content="<%= htmlWebpackPlugin.options.title %>"
-    />
-    <meta
-      name="description"
+      name="twitter:description"
       content="<%= htmlWebpackPlugin.options.description %>"
     />
     <meta
       name="twitter:title"
       content="<%= htmlWebpackPlugin.options.title %>"
     />
-    <meta
-      name="twitter:description"
-      content="<%= htmlWebpackPlugin.options.title %>"
-    />
-    <meta
-      name="og:description"
-      content="<%= htmlWebpackPlugin.options.description %>"
-    />
-    <meta name="og:title" content="<%= htmlWebpackPlugin.options.title %>" />
     <meta
       property="og:image:secure"
       content="https://cpb-us-w2.wpmucdn.com/sites.wustl.edu/dist/8/1082/files/2017/11/medical-school-featured-05-24tco0b.jpg"
@@ -38,6 +26,23 @@
     />
     <meta property="og:image:width" content="720" />
     <meta property="og:image:height" content="275" />
+    <meta
+      property="og:description"
+      content="<%= htmlWebpackPlugin.options.description %>"
+    />
+    <meta
+      name="description"
+      content="<%= htmlWebpackPlugin.options.description %>"
+    />
+    <meta
+      property="og:title"
+      content="<%= htmlWebpackPlugin.options.title %>"
+    />
+    <meta
+      property="og:site_name"
+      content="<%= htmlWebpackPlugin.options.site_name %>"
+    />
+    <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
 
   <body>
