@@ -53,7 +53,8 @@
   border-bottom: 2px solid grey;
 }
 
-.minigraph svg {
+.minigraph svg,
+.maingraph svg {
   overflow: visible;
 }
 

@@ -190,8 +190,6 @@ export default {
   components: {},
   mounted() {
     startSpinningWheel()
-
-    if (window.safari) setTimeout(sample, 500)
     addEventListener('resize', prepare)
   },
   data() {
