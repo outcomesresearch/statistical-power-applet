@@ -144,7 +144,9 @@ function axisPrep() {
 // When tool loads for the first time, initialize screen size and prepare the
 // containers to which later shapes will be drawn.  Then call plot() to carry
 // out rest of shape creation
-function prepare() {
+export function prepare() {
+  $('.maingraph svg').empty()
+  $('.minigraph svg').empty()
   $('#loader').remove()
   $('.container').css('display', 'grid')
   $('#description').css('display', 'block')

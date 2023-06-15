@@ -4,13 +4,12 @@
 
 .container {
   display: none;
-  grid-template-columns: 600px 250px;
+  grid-template-columns: auto 250px;
   grid-gap: 10px;
   background-color: #f1f1f1;
   height: 350px;
   padding: 10px;
-  min-width: max-content;
-  max-width: max-content;
+  width: 100%;
   font-family: sans-serif;
   font-size: 14px;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -18,6 +17,20 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.controls {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-rows: 3fr 1fr;
+}
+
+@media only screen and (max-width: 500px) {
+  .container {
+    grid-template-columns: 1fr;
+    height: max-content;
+    padding: 0px;
+  }
 }
 
 .shell,
@@ -32,6 +45,7 @@
   display: grid;
   grid-template-rows: 60px auto;
   grid-gap: 5px;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -61,7 +75,6 @@ td {
 }
 
 .controls {
-  width: 250px;
   float: right;
   color: #273746;
 }
@@ -105,10 +118,6 @@ td {
   background: #bdbdbd;
 }
 
-.consoleContainer {
-  height: calc(30% - 10px);
-}
-
 .console,
 #slider-vertical2,
 #slider-vertical1 {
@@ -116,8 +125,8 @@ td {
 }
 
 .console {
-  margin-top: 10px;
-  height: calc(100% - 10px - 4px);
+  height: 100%;
+  box-sizing: border-box;
   background: white;
   padding: 5px;
   font-family: courier;

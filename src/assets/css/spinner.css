@@ -1,8 +1,6 @@
 #loader {
   position: relative;
-  left: 50%;
-  top: 150px;
-  margin: -66px 0 0 -66px;
+  margin: auto auto;
   border: 8px solid #f3f3f3;
   border-radius: 50%;
   border-top: 8px solid #2980b9;
