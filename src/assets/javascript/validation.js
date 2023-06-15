@@ -11,30 +11,30 @@ power when alpha (Type I error) or mu1 (alternative population mean) are changed
 * @Last Modified time: 4/30/18
 */
 
-import { validValues } from "./validValues";
-import { output, getP, setValuesNew } from "./curves";
-import channel from "./Channel";
-import { calculateValue } from "./calculations";
+import { validValues } from './validValues'
+import { output, getP, setValuesNew } from './curves'
+import channel from './Channel'
+import { calculateValue } from './calculations'
 
 // Main Sample size Slider on right (grey one)
 $(function () {
-  $("#slider-vertical1").slider({
-    orientation: "vertical",
-    range: "min",
+  $('#slider-vertical1').slider({
+    orientation: 'vertical',
+    range: 'min',
     min: validValues.n.min,
     max: validValues.n.max,
     value: validValues.n.initial,
     step: 1,
     create: function (event, ui) {
-      setSliderTicks(event.target);
+      setSliderTicks(event.target)
     },
 
     slide: function (event, ui) {
-      const changed = { n: ui.value };
-      return validate(changed) && setValuesNew(changed, "change");
+      const changed = { n: ui.value }
+      return validate(changed) && setValuesNew(changed, 'change')
     },
-  });
-});
+  })
+})
 
 /*When a user changes power through the UI box or the slider, sample size
 must be calculated as function of the inputted power value as the two affect
@@ -53,97 +53,97 @@ with mean greater than null population mean.*/
 
 // Main Power Slider on right (red one)
 $(function () {
-  $("#slider-vertical2").slider({
-    orientation: "vertical",
-    range: "min",
+  $('#slider-vertical2').slider({
+    orientation: 'vertical',
+    range: 'min',
     min: validValues.power.min,
     max: validValues.power.max,
     value: 0.6, // similar value until calculated in const p object
     step: 0.001,
     slide: function (event, ui) {
-      const changed = { power: ui.value };
-      return validate(changed) && setValuesNew(changed, "change");
+      const changed = { power: ui.value }
+      return validate(changed) && setValuesNew(changed, 'change')
     },
-  });
-});
+  })
+})
 
 function setSliderTicks(el) {
-  $(el).find(".ui-slider-tick-mark").remove();
+  $(el).find('.ui-slider-tick-mark').remove()
   for (let i = 1; i < 20; i++) {
     if ((i * 5) % 25 == 0) {
       //major ticks at 25,50,75 (% to find integrs divisible by 25)
       $('<span class="ui-slider-tick-mark_large"></span>')
-        .css("bottom", i * 5 - 2 + "%")
-        .appendTo(".shell")
-        .css("height", "16px");
+        .css('bottom', i * 5 - 2 + '%')
+        .appendTo('.shell')
+        .css('height', '16px')
     } else {
       $('<span class="ui-slider-tick-mark"></span>')
-        .css("bottom", i * 5 - 1 + "%")
-        .appendTo(".shell")
-        .css("height", "8px");
+        .css('bottom', i * 5 - 1 + '%')
+        .appendTo('.shell')
+        .css('height', '8px')
     }
   }
 }
 
 export function setValues(id) {
-  let p = getP();
-  output("");
+  let p = getP()
+  output('')
   Object.keys(p).forEach((v) => {
-    $(`#${v}`).val(p[v].toFixed(validValues[v].precision));
-  });
-  $("#slider-vertical1").slider("value", p.n);
-  $("#slider-vertical2").slider("value", p.power);
+    $(`#${v}`).val(p[v].toFixed(validValues[v].precision))
+  })
+  $('#slider-vertical1').slider('value', p.n)
+  $('#slider-vertical2').slider('value', p.power)
 }
 
 // Function to do common tasks all together in one call.  Whenever a parameter
 // is changed, the following all need to happen to keep the data updated
 $(function () {
-  channel.on("change", setValues);
-  channel.on("drag", setValues);
-});
+  channel.on('change', setValues)
+  channel.on('drag', setValues)
+})
 
 export function validate(component) {
-  const id = Object.keys(component)[0];
-  const val = parseFloat(component[id]);
-  output("");
+  const id = Object.keys(component)[0]
+  const val = parseFloat(component[id])
+  output('')
 
   function withinBounds(component) {
-    const id = Object.keys(component)[0];
-    const val = parseFloat(component[id]);
-    const { min, max, msg } = validValues[id];
+    const id = Object.keys(component)[0]
+    const val = parseFloat(component[id])
+    const { min, max, msg } = validValues[id]
 
     if (isNaN(val) || !val || val < min || val > max) {
-      setValues(); // reset UI to its preexisting state
-      output(msg); // Inform the console
-      return false; // Inform the caller
+      setValues() // reset UI to its preexisting state
+      output(msg) // Inform the console
+      return false // Inform the caller
     }
-    return true;
+    return true
   }
 
   // If invalid, dont check dependent values, just return false
-  if (!withinBounds(component)) return false;
+  if (!withinBounds(component)) return false
 
   // If original value was valid, make sure dependent field is valid
-  if (id === "power") {
+  if (id === 'power') {
     // Return false if we're trying to set power lower than lowest permitted value predicted by our formulas.  Else calculate whether n is within bounds for that allowable power
     return (
-      val > calculateValue("power", { n: validValues.n.min }) &&
+      val > calculateValue('power', { n: validValues.n.min }) &&
       withinBounds({
-        n: calculateValue("n", { power: val }),
+        n: calculateValue('n', { power: val }),
       })
-    );
+    )
   }
 
-  if (["mu0", "mu1", "n", "std", "alpha"].includes(id)) {
+  if (['mu0', 'mu1', 'n', 'std', 'alpha'].includes(id)) {
     return withinBounds({
-      power: calculateValue("power", { [id]: val }),
-    });
+      power: calculateValue('power', { [id]: val }),
+    })
   }
 
   // If we're changing delta, make sure that resulting mu1 is within bounds, then that resulting
-  if (id === "delta") {
-    const t_mu1 = calculateValue("mu1", { delta: val });
-    const t_power = calculateValue("power", { mu1: t_mu1 });
-    return withinBounds({ mu1: t_mu1 }) && withinBounds({ power: t_power });
+  if (id === 'delta') {
+    const t_mu1 = calculateValue('mu1', { delta: val })
+    const t_power = calculateValue('power', { mu1: t_mu1 })
+    return withinBounds({ mu1: t_mu1 }) && withinBounds({ power: t_power })
   }
 }

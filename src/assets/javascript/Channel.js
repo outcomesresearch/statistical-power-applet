@@ -1,23 +1,23 @@
 class Channel {
   constructor() {
-    this.subscribers = {};
+    this.subscribers = {}
   }
 
   emit(eventName, data) {
     if (!Array.isArray(this.subscribers[eventName])) {
-      return;
+      return
     }
     this.subscribers[eventName].forEach((callback) => {
-      callback(data);
-    });
+      callback(data)
+    })
   }
 
   on(eventName, callback) {
     if (!Array.isArray(this.subscribers[eventName])) {
-      this.subscribers[eventName] = [];
+      this.subscribers[eventName] = []
     }
-    this.subscribers[eventName].push(callback);
+    this.subscribers[eventName].push(callback)
   }
 }
 
-export default new Channel();
+export default new Channel()
