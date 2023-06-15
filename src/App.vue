@@ -1,31 +1,140 @@
 <template>
   <outcomes-research-wrapper :_title="`Statistical Power Applet`">
-    <outcomes-navbar />
-    <div class="deprecated">
-      <div class="inner-wrapper">
-        <h2 class="no-top-spacing">Statistical Power Applet is deprecated.</h2>
-        <!-- <div class="grid"> -->
-        <img src="./assets/img/legacy-image.png" class="legacy-image" />
-        <p class="no-top-spacing0">
-          The
-          <span class="italic">
-            Designing Clinical and Outcomes Research Workshop
-          </span>
-          at Washington University in St. Louis School of Medicine no longer
-          uses the Statistical Power Applet in its instruction.
-        </p>
-        <hr />
-        <p>
-          Students are now recommended to use the G*Power applet, which offers a
-          greater variety of tests and features to explore statistical power.
-        </p>
-        <p>
-          G*Power is a statistical power analysis application for Mac and
-          Windows, produced and maintained by Universität Düsseldorf. More
-          information about the tool is available at
-          <a :href="gpowerLink">their website</a>
-          , including an installation link in the "Download" section.
-        </p>
+    <div id="loader"></div>
+    <div class="container">
+      <div class="graph">
+        <div class="minigraph">
+          <svg width="100%" height="100%" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="maingraph">
+          <svg width="100%" height="100%" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+      <div class="controls">
+        <div style="height: 70%">
+          <div class="leftControls">
+            <div class="inputContainer">
+              <table>
+                <tr>
+                  <td>
+                    μ
+                    <sub>0</sub>
+                    =
+                    <input
+                      ref="mu0"
+                      type="text"
+                      id="mu0"
+                      autocomplete="off"
+                      @change="_validate('mu0')"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    μ
+                    <sub>1</sub>
+                    =
+                    <input
+                      ref="mu1"
+                      type="text"
+                      id="mu1"
+                      autocomplete="off"
+                      @change="_validate('mu1')"
+                    />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    σ =
+                    <input
+                      ref="std"
+                      type="text"
+                      id="std"
+                      autocomplete="off"
+                      @change="_validate('std')"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    d =
+                    <input
+                      ref="delta"
+                      type="text"
+                      id="delta"
+                      autocomplete="off"
+                      @change="_validate('delta')"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    α =
+                    <input
+                      ref="alpha"
+                      id="alpha"
+                      autocomplete="off"
+                      @change="_validate('alpha')"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    β =
+                    <input type="text" id="effectsize" disabled />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    n =
+                    <input
+                      ref="n"
+                      type="text"
+                      id="n"
+                      autocomplete="off"
+                      @change="_validate('n')"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Power =
+                    <input
+                      ref="power"
+                      type="text"
+                      id="power"
+                      autocomplete="off"
+                      @change="_validate('power')"
+                    />
+                  </td>
+                </tr>
+              </table>
+              <div class="samplebutton" @click="sample">Sample</div>
+            </div>
+          </div>
+          <div class="rightControls">
+            <div id="slider-vertical2" class="shell">
+              <div class="inner label">
+                P
+                <br />
+                o
+                <br />
+                w
+                <br />
+                e
+                <br />
+                r
+              </div>
+            </div>
+            <div id="slider-vertical1" class="shell">
+              <div class="inner label">n</div>
+            </div>
+          </div>
+        </div>
+        <div class="consoleContainer">
+          <div class="console"></div>
+        </div>
       </div>
     </div>
     <outcomes-footer :copyright="copyright" />
@@ -33,64 +142,32 @@
 </template>
 
 <script>
+import {
+  startSpinningWheel,
+  sample,
+  setValuesNew,
+} from "./assets/javascript/curves";
+import { validate } from "./assets/javascript/validation";
+
 export default {
-  name: 'App',
-  data() {
-    return {
-      copyright: `Copyright © 2022, Washington University School of Medicine, St. Louis, Missouri`,
-      gpowerLink:
-        'https://www.psychologie.hhu.de/arbeitsgruppen/allgemeine-psychologie-und-arbeitspsychologie/gpower',
-    }
+  name: "App",
+  components: {},
+  mounted() {
+    startSpinningWheel();
+  },
+  methods: {
+    sample() {
+      sample();
+    },
+    _validate(id) {
+      const { value } = this.$refs[id];
+      validate({ [id]: value }) && setValuesNew({ [id]: value });
+    },
   },
 }
 </script>
 
 <style>
-.deprecated {
-  margin: 20pt;
-  margin-left: auto;
-  margin-right: auto;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  border-radius: 5px;
-  width: max-content;
-  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-    0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  max-width: 100%;
-  width: 600px;
-}
-
-.italic {
-  font-style: oblique;
-}
-
-.inner-wrapper {
-  padding: 10pt;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  max-width: 100%;
-}
-
-.legacy-image {
-  /* object-fit: cover; */
-  /* width: 400px; */
-  max-width: 100%;
-  border-radius: 2.5px;
-}
-
-.no-top-spacing {
-  padding-top: 0px;
-  margin-top: 0px;
-}
-
-@media screen and (max-width: 600px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-  .legacy-image {
-    width: 100%;
-  }
-}
+@import "./assets/css/spinner.css";
+@import "./assets/css/style.css";
 </style>
