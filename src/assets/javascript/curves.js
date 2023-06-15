@@ -149,7 +149,6 @@ export function prepare() {
   $('.minigraph svg').empty()
   $('#loader').remove()
   $('.container').css('display', 'grid')
-  $('#description').css('display', 'block')
 
   // Set initial values object (p)
   Object.keys(validValues).forEach((param) => {

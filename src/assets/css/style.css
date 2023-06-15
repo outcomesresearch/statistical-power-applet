@@ -57,14 +57,6 @@
   overflow: visible;
 }
 
-#description {
-  display: none;
-  font-family: Helvetica;
-  height: 220px;
-  color: rgb(50, 50, 50);
-  border: 2px solid lightgrey;
-}
-
 /* New stuff */
 table {
   border-spacing: 0px 5px;

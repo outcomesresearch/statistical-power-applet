@@ -140,6 +140,36 @@
             </div>
           </div>
         </div>
+        <div id="description">
+          <ul>
+            <li>μ0: Mean of the null population</li>
+            <li>μ1: Mean of the alternative population</li>
+            <li>α: Probability of a Type I error, one-tailed</li>
+            <li>β: Probability of a Type II error (1 - power)</li>
+            <li>σ: Pooled standard deviation</li>
+          </ul>
+          <ul>
+            <li>
+              n: Sample size set by user. When calculated from other parameters:
+              <div>
+                \(n = {(Z_\alpha + Z_\beta)^2 \;\cdot\; 2\sigma^2 \over d^2}\)
+              </div>
+            </li>
+            <li>
+              d: Normalized difference between the means:
+              <div>
+                \(d = {\mu_1-\mu_0\over\sigma}\)
+              </div>
+            </li>
+            <li>
+              Power: Statistical power resulting from the other parameters:
+              <div>
+                \(Z_\beta\,\rightarrow\,\beta\)
+              </div>
+              <div>\(Power = 1\,-\,\beta\)</div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <outcomes-footer :copyright="copyright" />
@@ -160,6 +190,8 @@ export default {
   components: {},
   mounted() {
     startSpinningWheel()
+
+    if (window.safari) setTimeout(sample, 500)
     addEventListener('resize', prepare)
   },
   data() {
@@ -182,5 +214,6 @@ export default {
 <style>
 @import './assets/css/spinner.css';
 @import './assets/css/style.css';
+@import './assets/css/description.css';
 @import './assets/css/wrapper-style.css';
 </style>
